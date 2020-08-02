@@ -8,6 +8,8 @@ import com.miaoshaproject.error.BussinessException;
 import com.miaoshaproject.error.EmBusinessError;
 import com.miaoshaproject.service.UserService;
 import com.miaoshaproject.service.model.UserModel;
+import com.miaoshaproject.validator.ValidationResult;
+import com.miaoshaproject.validator.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserPasswordDOMapper userPasswordDoMapper;
 
+    @Resource
+    private ValidatorImpl validator;
+
 
     @Override
     public UserModel getUserById(Integer id) {
@@ -51,12 +56,16 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isEmpty(userModel)){
             throw new BussinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
-        if (org.apache.commons.lang3.StringUtils.isEmpty(userModel.getName())
+        /*if (org.apache.commons.lang3.StringUtils.isEmpty(userModel.getName())
                 || StringUtils.isEmpty(userModel.getGender())
                 || StringUtils.isEmpty(userModel.getAge())
                 || StringUtils.isEmpty(userModel.getTelephone())
         ){
             throw new BussinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }*/
+        ValidationResult result = validator.validator(userModel);
+        if (result.isHasError()){
+            throw new BussinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, result.getErrMsg());
         }
 
         //实现model转DataObject方法

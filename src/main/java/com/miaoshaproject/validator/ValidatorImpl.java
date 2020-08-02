@@ -35,7 +35,6 @@ public class ValidatorImpl implements InitializingBean {
                 //获取发生错误得字段
                 String property = objectConstraintViolation.getPropertyPath().toString();
                 result.getErrMsgMap().put(property,message);;
-
             });
         }
         return result;
