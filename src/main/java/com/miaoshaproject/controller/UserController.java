@@ -16,6 +16,7 @@ import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Random;
 
@@ -100,8 +101,7 @@ public class UserController extends BaseController{
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         BASE64Encoder encoder = new BASE64Encoder();
         //加密字符串
-        String newstr = encoder.encode(md5.digest(str.getBytes("utf-8")));
-        return newstr;
+        return encoder.encode(md5.digest(str.getBytes(StandardCharsets.UTF_8)));
     }
 
     @ApiOperation(value = "用户获取Otp验证码的接口", httpMethod = "POST")
